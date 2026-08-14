@@ -1,12 +1,13 @@
 import express from "express"
-import User from "../models/user.model"
+import User from "../models/user.model.js"
 import { verifyWebhook } from "@clerk/backend/webhooks"
 
-router = express.Router()
+const router = express.Router()
 
 router.post("/",async (req, res)=>{
     try{
         const signingSecret = process.env.CLERK_WEBHOOK_SIGNING_SECRET
+    
         if(!signingSecret){
             res.status(201).json({
                 message : "Webhook secret is not provided"
