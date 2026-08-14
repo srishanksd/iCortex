@@ -22,7 +22,7 @@ app.use(clerkMiddleware())
 
 app.get("/health",(req, res)=>{
     res.status(200).json({
-        ok : true
+        message : "your backend is working fine!"
     })
 })
 
