@@ -33,7 +33,12 @@ if(fs.existsSync(publicDir)){
     })
 }
 
-app.listen(PORT, ()=>{
-    connectDB();
-    console.log("Server is runnign in the port", PORT)
-})
+async function startServer() {
+    await connectDB();
+
+    app.listen(PORT, () => {
+        console.log("Server is runnign in the port", PORT);
+    });
+}
+
+startServer();

@@ -11,7 +11,7 @@
         email : {
             type : String,
             unique : true,
-            reqiured : true
+            required : true
         },
         fullName :{
             type : String,

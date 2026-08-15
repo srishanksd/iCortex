@@ -30,8 +30,13 @@ router.post("/",async (req, res)=>{
         if(evt.type === "user.created" || evt.type === "user.updated"){
             const u = evt.data;
 
-            u.email_adress?.find((e) => e.id === u.primary_email_address_id)?.email_adress ??
-            u.email_addresses?.[0].email_address;
+            const email =
+                u.email_addresses?.find((e) => e.id === u.primary_email_address_id)?.email_address ??
+                u.email_addresses?.[0]?.email_address;
+
+            if (!email) {
+                throw new Error(`Clerk user ${u.id} has no email address`);
+            }
 
             const fullName = 
                 [u.first_name, u.last_name].filter(Boolean).join(" ") ||
@@ -42,8 +47,8 @@ router.post("/",async (req, res)=>{
 
             await User.findOneAndUpdate(
                 {clerkId : u.id},
-                {clerkId :u.id, email, fullName, profilePic: u.image_url },
-                {new: true, upsert : true ,setDefaultsOnInsert: true },
+                { $set: { email, fullName, profilePic: u.image_url ?? "" }, $setOnInsert: { clerkId: u.id } },
+                { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true },
 
             )
         }
